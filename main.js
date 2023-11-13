@@ -1,4 +1,5 @@
-const URL_API = 'https://api.thecatapi.com/v1/images/search?limit=4';
+const URL_API = 'https://api.thecatapi.com/v1/images/search?limit=3&api_key=live_G2Mo7qyg759KUXFkALRfIwZaixR8AWO25m6XgCLpgf37bNJL5Gb2QVgfxXMLBAUA';
+
 
 // fetch(URL)
 //     .then(res => res.json())
@@ -16,12 +17,10 @@ async function getCat() {
     const img1 = document.getElementById('img1');
     const img2 = document.getElementById('img2');
     const img3 = document.getElementById('img3');
-    const img4 = document.getElementById('img4');
     
     img1.src = data[0].url;
     img2.src = data[1].url;
     img3.src = data[2].url;
-    img4.src = data[3].url;
 }
 
 const boton = document.querySelector('button');
