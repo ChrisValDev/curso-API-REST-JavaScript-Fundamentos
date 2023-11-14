@@ -1,6 +1,7 @@
 const API_RANDOM = 'https://api.thecatapi.com/v1/images/search?limit=2';
 const API_FAVORITES = 'https://api.thecatapi.com/v1/favourites';
 const API_FAVORITES_DELETE = (id) => `https://api.thecatapi.com/v1/favourites/${id}`;
+const API_UPLOAD = 'https://api.thecatapi.com/v1/images/upload';
 
 const spanError = document.getElementById("orto");
 
@@ -106,6 +107,32 @@ async function deleteFavoriteMichi(id) {
     } else {
         console.log('Michi eliminado de favoritos');
         loadFavoriteMichis();
+    }
+}
+
+async function uploadMichiPhoto() {
+    const form = document.getElementById('uploadingForm')
+    const formData = new FormData(form);
+
+    console.log(formData.get('file'));
+
+    const res = await fetch(API_UPLOAD, {
+        method: 'POST',
+        headers: {
+            'X-API-KEY': 'live_G2Mo7qyg759KUXFkALRfIwZaixR8AWO25m6XgCLpgf37bNJL5Gb2QVgfxXMLBAUA'
+        },
+        body: formData,
+    })
+    const data = await res.json();
+
+    if (res.status !== 201) {
+        spanError.innerHTML = 'Hubo un error: ' + res.status + data.message;
+        console.log({data});
+    } else {
+        console.log('Foto de michi subida')
+        console.log({data})
+        console.log(data.url)
+        saveFavoriteMichi(data.id);
     }
 }
 
