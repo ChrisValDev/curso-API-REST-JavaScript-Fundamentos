@@ -1,6 +1,6 @@
 const API_RANDOM = 'https://api.thecatapi.com/v1/images/search?limit=2&api_key=live_G2Mo7qyg759KUXFkALRfIwZaixR8AWO25m6XgCLpgf37bNJL5Gb2QVgfxXMLBAUA';
 const API_FAVORITES = 'https://api.thecatapi.com/v1/favourites?&api_key=live_G2Mo7qyg759KUXFkALRfIwZaixR8AWO25m6XgCLpgf37bNJL5Gb2QVgfxXMLBAUA';
-const API_KEY = 'live_G2Mo7qyg759KUXFkALRfIwZaixR8AWO25m6XgCLpgf37bNJL5Gb2QVgfxXMLBAUA';
+const API_FAVORITES_DELETE = (id) => `https://api.thecatapi.com/v1/favourites/${id}?&api_key=live_G2Mo7qyg759KUXFkALRfIwZaixR8AWO25m6XgCLpgf37bNJL5Gb2QVgfxXMLBAUA`;
 
 const spanError = document.getElementById("orto");
 
@@ -37,18 +37,26 @@ async function loadFavoriteMichis() {
     if (res.status !== 200) {
         spanError.innerHTML = 'Hubo un error: ' + res.status + data.message;
     } else {
+        const section = document.getElementById('favoriteMichis');        
+        section.innerHTML = "";
+
+        const h2 = document.createElement('h2');
+        const h2Text = document.createTextNode('Michis favoritos');
+        h2.appendChild(h2Text);
+        section.appendChild(h2);
+        
         data.forEach(michi => {
-            const section = document.getElementById('favoriteMichis');
             const article = document.createElement('article');
             const img = document.createElement('img');
             const btn = document.createElement('button');
             const btnText = document.createTextNode('Sacar michi de favoritos');
 
-            btn.appendChild(btnText);
             img.src = michi.image.url;
             img.width = 300;
-            article.appendChild(btn);
+            btn.appendChild(btnText);
+            btn.onclick = () => deleteFavoriteMichi(michi.id);
             article.appendChild(img);
+            article.appendChild(btn);
             section.appendChild(article);
 
         });
@@ -72,9 +80,25 @@ async function saveFavoriteMichi(id) {
 
     if (res.status !== 200) {
         spanError.innerHTML = 'Hubo un error: ' + res.status + data.message;
+    } else {
+        console.log('Michi guardado en favoritos');
+        loadFavoriteMichis();
     }
 }
 
+async function deleteFavoriteMichi(id) {
+    const res = await fetch(API_FAVORITES_DELETE(id), {
+        method: 'DELETE',
+    });
+    const data = await res.json();
+
+    if (res.status !== 200) {
+        spanError.innerHTML = 'Hubo un error: ' + res.status + data.message;
+    } else {
+        console.log('Michi eliminado de favoritos');
+        loadFavoriteMichis();
+    }
+}
 
 loadRandomMichis();
 loadFavoriteMichis();
